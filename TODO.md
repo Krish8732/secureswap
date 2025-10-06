@@ -12,6 +12,9 @@ Add a global currency change option so users from around the world can use the a
 - [x] Update currency display in CreateExchange page
 - [x] Add currency conversion logic
 - [x] Persist user currency preference in localStorage
+- [x] Integrate live currency rates API (fawazahmed0/exchange-api)
+- [x] Add caching and fallback rates for API failures
+- [x] Add loading and error states for API calls
 - [ ] Test currency switching functionality
 
 ## Files to Create/Modify

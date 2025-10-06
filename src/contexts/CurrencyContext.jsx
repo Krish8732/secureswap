@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Currency conversion rates (base: USD)
-const CURRENCY_RATES = {
+// Default fallback rates in case API fails
+const FALLBACK_RATES = {
   USD: 1,
   EUR: 0.85,
   GBP: 0.73,
@@ -35,18 +35,81 @@ export const useCurrency = () => {
 
 export const CurrencyProvider = ({ children }) => {
   const [currency, setCurrency] = useState('USD');
+  const [currencyRates, setCurrencyRates] = useState(FALLBACK_RATES);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Load currency from localStorage on mount
+  // Fetch live currency rates from API
+  const fetchCurrencyRates = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      // Check if we have cached rates less than 1 hour old
+      const cachedRates = localStorage.getItem('currencyRates');
+      const cachedTimestamp = localStorage.getItem('currencyRatesTimestamp');
+
+      if (cachedRates && cachedTimestamp) {
+        const cacheAge = Date.now() - parseInt(cachedTimestamp);
+        const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
+
+        if (cacheAge < oneHour) {
+          setCurrencyRates(JSON.parse(cachedRates));
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      // Fetch from API
+      const response = await fetch('https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/usd.json');
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch currency rates');
+      }
+
+      const data = await response.json();
+
+      // Extract rates for supported currencies
+      const newRates = {
+        USD: 1,
+        EUR: data.usd.eur || FALLBACK_RATES.EUR,
+        GBP: data.usd.gbp || FALLBACK_RATES.GBP,
+        JPY: data.usd.jpy || FALLBACK_RATES.JPY,
+        CAD: data.usd.cad || FALLBACK_RATES.CAD,
+        AUD: data.usd.aud || FALLBACK_RATES.AUD,
+        INR: data.usd.inr || FALLBACK_RATES.INR,
+        CNY: data.usd.cny || FALLBACK_RATES.CNY,
+      };
+
+      setCurrencyRates(newRates);
+
+      // Cache the rates
+      localStorage.setItem('currencyRates', JSON.stringify(newRates));
+      localStorage.setItem('currencyRatesTimestamp', Date.now().toString());
+
+    } catch (err) {
+      console.error('Error fetching currency rates:', err);
+      setError(err.message);
+      // Use fallback rates if API fails
+      setCurrencyRates(FALLBACK_RATES);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Load currency preference and fetch rates on mount
   useEffect(() => {
     const savedCurrency = localStorage.getItem('userCurrency');
-    if (savedCurrency && CURRENCY_RATES[savedCurrency]) {
+    if (savedCurrency && FALLBACK_RATES[savedCurrency]) {
       setCurrency(savedCurrency);
     }
+
+    fetchCurrencyRates();
   }, []);
 
   // Save currency to localStorage when changed
   const changeCurrency = (newCurrency) => {
-    if (CURRENCY_RATES[newCurrency]) {
+    if (currencyRates[newCurrency]) {
       setCurrency(newCurrency);
       localStorage.setItem('userCurrency', newCurrency);
     }
@@ -57,10 +120,10 @@ export const CurrencyProvider = ({ children }) => {
     if (typeof amount !== 'number') return amount;
 
     // Convert to USD first if not already
-    const usdAmount = fromCurrency === 'USD' ? amount : amount / CURRENCY_RATES[fromCurrency];
+    const usdAmount = fromCurrency === 'USD' ? amount : amount / currencyRates[fromCurrency];
 
     // Convert to selected currency
-    return usdAmount * CURRENCY_RATES[currency];
+    return usdAmount * currencyRates[currency];
   };
 
   // Format amount with currency symbol
@@ -78,11 +141,15 @@ export const CurrencyProvider = ({ children }) => {
 
   const value = {
     currency,
-    currencies: Object.keys(CURRENCY_RATES),
+    currencies: Object.keys(currencyRates),
     currencySymbols: CURRENCY_SYMBOLS,
+    currencyRates,
+    isLoading,
+    error,
     changeCurrency,
     convertAmount,
     formatAmount,
+    refreshRates: fetchCurrencyRates,
   };
 
   return (
