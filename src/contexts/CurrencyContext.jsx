@@ -10,6 +10,16 @@ const FALLBACK_RATES = {
   AUD: 1.35,
   INR: 74.5,
   CNY: 6.45,
+  CHF: 0.91,
+  SEK: 8.62,
+  NZD: 1.42,
+  MXN: 20.0,
+  SGD: 1.35,
+  HKD: 7.78,
+  NOK: 8.85,
+  KRW: 1180.0,
+  TRY: 8.5,
+  BRL: 5.2,
 };
 
 const CURRENCY_SYMBOLS = {
@@ -21,6 +31,16 @@ const CURRENCY_SYMBOLS = {
   AUD: 'A$',
   INR: '₹',
   CNY: '¥',
+  CHF: 'Fr',
+  SEK: 'kr',
+  NZD: 'NZ$',
+  MXN: '$',
+  SGD: 'S$',
+  HKD: 'HK$',
+  NOK: 'kr',
+  KRW: '₩',
+  TRY: '₺',
+  BRL: 'R$',
 };
 
 const CurrencyContext = createContext();
@@ -61,7 +81,7 @@ export const CurrencyProvider = ({ children }) => {
       }
 
       // Fetch from API
-      const response = await fetch('https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/usd.json');
+      const response = await fetch('https://cdn.jsdelivr.net/gh/fawazahmed0/exchange-api@1/latest/currencies/usd.json');
 
       if (!response.ok) {
         throw new Error('Failed to fetch currency rates');
@@ -79,6 +99,13 @@ export const CurrencyProvider = ({ children }) => {
         AUD: data.usd.aud || FALLBACK_RATES.AUD,
         INR: data.usd.inr || FALLBACK_RATES.INR,
         CNY: data.usd.cny || FALLBACK_RATES.CNY,
+        CHF: data.usd.chf || FALLBACK_RATES.CHF,
+        SEK: data.usd.sek || FALLBACK_RATES.SEK,
+        NZD: data.usd.nzd || FALLBACK_RATES.NZD,
+        MXN: data.usd.mxn || FALLBACK_RATES.MXN,
+        SGD: data.usd.sgd || FALLBACK_RATES.SGD,
+        HKD: data.usd.hkd || FALLBACK_RATES.HKD,
+        NOK: data.usd.nok || FALLBACK_RATES.NOK,
       };
 
       setCurrencyRates(newRates);
