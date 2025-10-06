@@ -1,9 +1,12 @@
 import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
+import { useCurrency } from '../../../contexts/CurrencyContext';
 
 
 const ExchangeParticipants = ({ participants, currentUserId, isRevealed }) => {
+  const { formatAmount } = useCurrency();
+
   const currentUser = participants?.find(p => p?.id === currentUserId);
   const partner = participants?.find(p => p?.id !== currentUserId);
 
@@ -74,7 +77,7 @@ const ExchangeParticipants = ({ participants, currentUserId, isRevealed }) => {
               </div>
               <div className="text-right">
                 <div className="text-lg font-semibold text-foreground">
-                  ${participant?.offering?.value?.toLocaleString()}
+                  {formatAmount(participant?.offering?.value)}
                 </div>
                 <div className="text-xs text-muted-foreground">Estimated Value</div>
               </div>

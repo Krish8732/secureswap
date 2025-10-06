@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Icon from '../AppIcon';
 import Button from './Button';
+import CurrencySelector from './CurrencySelector';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -50,6 +51,9 @@ const Header = () => {
                 <span>{item?.label}</span>
               </Link>
             ))}
+            <div className="ml-4">
+              <CurrencySelector />
+            </div>
           </nav>
 
           {/* Mobile Menu Button */}

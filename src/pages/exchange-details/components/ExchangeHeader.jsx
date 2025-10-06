@@ -1,8 +1,11 @@
 import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
+import { useCurrency } from '../../../contexts/CurrencyContext';
 
 const ExchangeHeader = ({ exchange, onBack, onMessage, onDispute }) => {
+  const { formatAmount } = useCurrency();
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'active': return 'text-primary bg-primary/10';
@@ -88,7 +91,7 @@ const ExchangeHeader = ({ exchange, onBack, onMessage, onDispute }) => {
         <div className="text-right">
           <div className="text-sm text-muted-foreground mb-1">Total Value</div>
           <div className="text-2xl font-semibold text-foreground">
-            ${exchange?.totalValue?.toLocaleString()}
+            {formatAmount(exchange?.totalValue)}
           </div>
         </div>
       </div>

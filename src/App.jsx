@@ -1,9 +1,12 @@
 import React from "react";
 import Routes from "./Routes";
+import { CurrencyProvider } from "./contexts/CurrencyContext";
 
 function App() {
   return (
-    <Routes />
+    <CurrencyProvider>
+      <Routes />
+    </CurrencyProvider>
   );
 }
 

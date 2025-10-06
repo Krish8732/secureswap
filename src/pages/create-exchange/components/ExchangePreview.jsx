@@ -2,8 +2,9 @@ import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 import Button from '../../../components/ui/Button';
+import { useCurrency } from '../../../contexts/CurrencyContext';
 
-const ExchangePreview = ({ 
+const ExchangePreview = ({
   exchangeType,
   category,
   title,
@@ -18,6 +19,7 @@ const ExchangePreview = ({
   trustLevel,
   isPublic
 }) => {
+  const { formatAmount } = useCurrency();
   const getTypeIcon = (type) => {
     switch (type) {
       case 'service': return 'Briefcase';
@@ -178,7 +180,7 @@ const ExchangePreview = ({
           {estimatedValue && (
             <div className="mt-2 flex items-center space-x-2">
               <Icon name="DollarSign" size={14} color="var(--color-success)" />
-              <span className="text-sm font-medium text-success">${estimatedValue} estimated value</span>
+              <span className="text-sm font-medium text-success">{formatAmount(Number(estimatedValue))} estimated value</span>
             </div>
           )}
         </div>

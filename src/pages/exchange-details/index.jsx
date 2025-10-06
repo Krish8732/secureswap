@@ -8,12 +8,14 @@ import ExchangeTimeline from './components/ExchangeTimeline';
 import MessagingPanel from './components/MessagingPanel';
 import ExchangeTerms from './components/ExchangeTerms';
 import ExchangeProgressIndicator from '../../components/ui/ExchangeProgressIndicator';
+import { useCurrency } from '../../contexts/CurrencyContext';
 
 const ExchangeDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const exchangeId = searchParams?.get('id') || 'EX-2025-001';
-  
+  const { formatAmount } = useCurrency();
+
   const [currentUserId] = useState('user-123');
   const [showMessageDialog, setShowMessageDialog] = useState(false);
   const [showDisputeDialog, setShowDisputeDialog] = useState(false);

@@ -2,17 +2,19 @@ import React from 'react';
 import Input from '../../../components/ui/Input';
 import Select from '../../../components/ui/Select';
 import Icon from '../../../components/AppIcon';
+import { useCurrency } from '../../../contexts/CurrencyContext';
 
-const WhatIWantSection = ({ 
-  wantedType, 
-  wantedCategory, 
-  wantedDescription, 
+const WhatIWantSection = ({
+  wantedType,
+  wantedCategory,
+  wantedDescription,
   estimatedValue,
   onWantedTypeChange,
-  onWantedCategoryChange, 
+  onWantedCategoryChange,
   onWantedDescriptionChange,
-  onEstimatedValueChange 
+  onEstimatedValueChange
 }) => {
+  const { currency } = useCurrency();
   const wantedTypes = [
     { value: 'service', label: 'Service' },
     { value: 'product', label: 'Product' },
@@ -127,7 +129,7 @@ const WhatIWantSection = ({
       {/* Estimated Value */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Input
-          label="Estimated Value (USD)"
+          label={`Estimated Value (${currency})`}
           type="number"
           placeholder="0.00"
           value={estimatedValue}
