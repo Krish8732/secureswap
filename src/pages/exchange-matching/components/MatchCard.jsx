@@ -71,8 +71,8 @@ const MatchCard = ({ match, onViewDetails, onSendRequest }) => {
             <div className="relative">
               <div className="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-primary to-accent">
                 <Image
-                  src={match?.avatar}
-                  alt={match?.name}
+                  src={match?.avatar_url || match?.avatar}
+                  alt={match?.display_name || match?.name}
                   className="w-full h-full rounded-full object-cover border-2 border-card"
                   onLoad={() => setIsImageLoading(false)}
                 />
@@ -84,7 +84,7 @@ const MatchCard = ({ match, onViewDetails, onSendRequest }) => {
               )}
             </div>
             <div>
-              <h3 className="text-lg font-bold text-foreground tracking-tight">{match?.name}</h3>
+              <h3 className="text-lg font-bold text-foreground tracking-tight">{match?.display_name || match?.name}</h3>
               <div className="flex items-center space-x-2 mt-0.5">
                 <div className="flex items-center space-x-0.5">
                   {renderStars(match?.rating)}

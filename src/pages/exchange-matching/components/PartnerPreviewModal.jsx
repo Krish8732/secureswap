@@ -79,8 +79,8 @@ const PartnerPreviewModal = ({ partner, isOpen, onClose, onSendRequest, onViewFu
           <div className="flex items-start space-x-4">
             <div className="relative">
               <Image
-                src={partner?.avatar}
-                alt={partner?.name}
+                src={partner?.avatar_url || partner?.avatar}
+                alt={partner?.display_name || partner?.name}
                 className="w-16 h-16 rounded-full object-cover"
               />
               {partner?.isVerified && (
@@ -91,7 +91,7 @@ const PartnerPreviewModal = ({ partner, isOpen, onClose, onSendRequest, onViewFu
             </div>
             <div className="flex-1">
               <div className="flex items-center space-x-2 mb-2">
-                <h3 className="text-lg font-semibold text-foreground">{partner?.name}</h3>
+                <h3 className="text-lg font-semibold text-foreground">{partner?.display_name || partner?.name}</h3>
                 {partner?.isOnline && (
                   <div className="flex items-center space-x-1">
                     <div className="w-2 h-2 bg-success rounded-full"></div>

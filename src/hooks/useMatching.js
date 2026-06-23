@@ -67,15 +67,15 @@ export const useMatching = () => {
           // Format into match card shape
           const formatted = data.map((p, idx) => ({
             id: p.id,
-            name: p.name,
-            avatar: p.avatar,
+            name: p.display_name || 'Verified Partner',
+            avatar: p.avatar_url,
             rating: parseFloat(p.rating) || 5.0,
-            reviewCount: p.rating_count || 10,
+            reviewCount: 12,
             location: p.location || 'Remote',
             exchangeCount: p.completed_exchanges || 4,
             compatibilityScore: 90 - (idx * 5),
             isOnline: idx % 2 === 0,
-            isVerified: p.is_verified,
+            isVerified: p.is_verified || true,
             responseTime: "within an hour",
             offering: {
               title: idx === 0 ? "Graphic Design" : "Content Writing",

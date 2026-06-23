@@ -80,8 +80,8 @@ export const getExchanges = async () => {
       .select(`
         *,
         partner:partner_id (
-          name,
-          avatar,
+          display_name,
+          avatar_url,
           rating
         )
       `)
@@ -103,8 +103,8 @@ export const getExchangeById = async (id) => {
       .select(`
         *,
         partner:partner_id (
-          name,
-          avatar,
+          display_name,
+          avatar_url,
           rating,
           location,
           completed_exchanges,

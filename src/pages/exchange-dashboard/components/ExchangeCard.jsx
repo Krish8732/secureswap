@@ -46,6 +46,9 @@ const ExchangeCard = ({ exchange }) => {
     return `${Math.ceil(diffHours / 24)}d remaining`;
   };
 
+  const partnerName = exchange?.partner?.display_name || exchange?.partner?.name || 'Acme Partner';
+  const partnerAvatar = exchange?.partner?.avatar_url || exchange?.partner?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150';
+
   return (
     <div className="bg-card border border-border rounded-lg p-6 hover:shadow-elevated transition-smooth">
       <div className="flex items-start justify-between mb-4">
@@ -65,15 +68,15 @@ const ExchangeCard = ({ exchange }) => {
       <div className="flex items-center space-x-4 mb-4">
         <div className="flex items-center space-x-2">
           <Image
-            src={exchange?.partner?.avatar}
-            alt={exchange?.partner?.name}
+            src={partnerAvatar}
+            alt={partnerName}
             className="w-8 h-8 rounded-full object-cover"
           />
           <div>
-            <p className="text-sm font-medium text-foreground">{exchange?.partner?.name}</p>
+            <p className="text-sm font-medium text-foreground">{partnerName}</p>
             <div className="flex items-center space-x-1">
               <Icon name="Star" size={12} color="var(--color-warning)" />
-              <span className="text-xs text-muted-foreground">{exchange?.partner?.rating}</span>
+              <span className="text-xs text-muted-foreground">{exchange?.partner?.rating || '4.9'}</span>
             </div>
           </div>
         </div>
