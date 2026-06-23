@@ -10,11 +10,19 @@ const ExchangeSettings = ({
   isPhysical,
   trustLevel,
   isPublic,
+  availableFrom,
+  allowPartial,
+  autoMatching,
+  requireEscrow,
   onDurationChange,
   onLocationChange,
   onIsPhysicalChange,
   onTrustLevelChange,
-  onIsPublicChange
+  onIsPublicChange,
+  onAvailableFromChange,
+  onAllowPartialChange,
+  onAutoMatchingChange,
+  onRequireEscrowChange
 }) => {
   const durationOptions = [
     { value: '1', label: '1 day' },
@@ -76,6 +84,8 @@ const ExchangeSettings = ({
           label="Available From"
           type="date"
           min={getCurrentDate()}
+          value={availableFrom}
+          onChange={onAvailableFromChange}
           description="When can you start this exchange?"
         />
       </div>
@@ -157,16 +167,22 @@ const ExchangeSettings = ({
         
         <div className="space-y-3">
           <Checkbox
+            checked={allowPartial}
+            onChange={(e) => onAllowPartialChange(e?.target?.checked)}
             label="Allow partial exchanges"
             description="Accept offers for part of what you're offering"
           />
           
           <Checkbox
+            checked={autoMatching}
+            onChange={(e) => onAutoMatchingChange(e?.target?.checked)}
             label="Enable auto-matching"
             description="Automatically notify you of potential matches"
           />
           
           <Checkbox
+            checked={requireEscrow}
+            onChange={(e) => onRequireEscrowChange(e?.target?.checked)}
             label="Require escrow protection"
             description="Use SecureSwap's escrow service for added security"
           />

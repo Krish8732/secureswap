@@ -4,8 +4,15 @@ import Icon from '../AppIcon';
 import Button from './Button';
 import Input from './Input';
 
-const DashboardNavPanel = ({ isCollapsed = false, onToggleCollapse }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+const DashboardNavPanel = ({ 
+  isCollapsed = false, 
+  onToggleCollapse,
+  searchQuery,
+  onSearchQueryChange
+}) => {
+  const [internalQuery, setInternalQuery] = useState('');
+  const query = searchQuery !== undefined ? searchQuery : internalQuery;
+  const setQuery = onSearchQueryChange || setInternalQuery;
   const location = useLocation();
 
   const quickActions = [
@@ -60,8 +67,8 @@ const DashboardNavPanel = ({ isCollapsed = false, onToggleCollapse }) => {
             <Input
               type="search"
               placeholder="Search exchanges..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e?.target?.value)}
+              value={query}
+              onChange={(e) => setQuery(e?.target?.value)}
               className="w-full"
             />
           </div>

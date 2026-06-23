@@ -9,9 +9,11 @@ import PartnerPreviewModal from './components/PartnerPreviewModal';
 import SavedSearches from './components/SavedSearches';
 import Icon from '../../components/AppIcon';
 import Button from '../../components/ui/Button';
+import { useMatching } from '../../hooks/useMatching';
 
 const ExchangeMatching = () => {
   const navigate = useNavigate();
+  const { matches: hookMatches = [], loading, error } = useMatching();
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('compatibility');
@@ -29,159 +31,7 @@ const ExchangeMatching = () => {
     availability: 'any',
   });
 
-  // Mock data for potential matches
-  const mockMatches = [
-    {
-      id: 1,
-      name: "Sarah Johnson",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
-      rating: 4.9,
-      reviewCount: 127,
-      compatibilityScore: 94,
-      location: "2.3 miles away",
-      isVerified: true,
-      isOnline: true,
-      responseTime: "Within 1 hour",
-      exchangeCount: 23,
-      offering: {
-        title: "$100 Amazon Gift Card",
-        description: "Brand new Amazon gift card, perfect for online shopping. Can provide proof of purchase and will transfer digitally for security.",
-        category: "Gift Cards",
-        estimatedValue: 100,
-        images: [
-          "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=200&h=200&fit=crop",
-          "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=200&fit=crop"
-        ]
-      },
-      lookingFor: ["Web Development", "Graphic Design", "Digital Marketing", "Photography"]
-    },
-    {
-      id: 2,
-      name: "Michael Chen",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-      rating: 4.7,
-      reviewCount: 89,
-      compatibilityScore: 87,
-      location: "5.1 miles away",
-      isVerified: true,
-      isOnline: false,
-      lastActive: "2 hours ago",
-      responseTime: "Within 4 hours",
-      exchangeCount: 15,
-      offering: {
-        title: "Professional Logo Design Service",
-        description: "Custom logo design with 3 concepts, unlimited revisions, and final files in all formats. 5+ years experience in branding.",
-        category: "Services",
-        estimatedValue: 150,
-        images: [
-          "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=200&h=200&fit=crop",
-          "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=200&fit=crop"
-        ]
-      },
-      lookingFor: ["Gift Cards", "Electronics", "Software Licenses"]
-    },
-    {
-      id: 3,
-      name: "Emily Rodriguez",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-      rating: 4.8,
-      reviewCount: 156,
-      compatibilityScore: 82,
-      location: "3.7 miles away",
-      isVerified: true,
-      isOnline: true,
-      responseTime: "Within 1 hour",
-      exchangeCount: 31,
-      offering: {
-        title: "Photography Session Package",
-        description: "Professional portrait or event photography session including 2 hours shooting time and 20 edited high-resolution photos.",
-        category: "Services",
-        estimatedValue: 200,
-        images: [
-          "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=200&h=200&fit=crop",
-          "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=200&h=200&fit=crop"
-        ]
-      },
-      lookingFor: ["Web Development", "App Development", "Digital Marketing"]
-    },
-    {
-      id: 4,
-      name: "David Thompson",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-      rating: 4.6,
-      reviewCount: 73,
-      compatibilityScore: 79,
-      location: "8.2 miles away",
-      isVerified: false,
-      isOnline: false,
-      lastActive: "1 day ago",
-      responseTime: "Within 24 hours",
-      exchangeCount: 12,
-      offering: {
-        title: "MacBook Pro 13-inch (2021)",
-        description: "Excellent condition MacBook Pro with M1 chip, 8GB RAM, 256GB SSD. Includes original charger and box. Perfect for students or professionals.",
-        category: "Electronics",
-        estimatedValue: 800,
-        images: [
-          "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=200&fit=crop",
-          "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=200&h=200&fit=crop"
-        ]
-      },
-      lookingFor: ["Gift Cards", "Gaming Console", "Camera Equipment"]
-    },
-    {
-      id: 5,
-      name: "Lisa Wang",
-      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
-      rating: 4.9,
-      reviewCount: 201,
-      compatibilityScore: 91,
-      location: "1.8 miles away",
-      isVerified: true,
-      isOnline: true,
-      responseTime: "Within 1 hour",
-      exchangeCount: 45,
-      offering: {
-        title: "Full-Stack Web Development",
-        description: "Complete website development using React, Node.js, and modern technologies. Includes responsive design, database integration, and deployment.",
-        category: "Services",
-        estimatedValue: 500,
-        images: [
-          "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=200&h=200&fit=crop",
-          "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=200&h=200&fit=crop"
-        ]
-      },
-      lookingFor: ["Gift Cards", "Photography", "Marketing Services", "Design Work"]
-    },
-    {
-      id: 6,
-      name: "James Wilson",
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
-      rating: 4.5,
-      reviewCount: 64,
-      compatibilityScore: 75,
-      location: "6.4 miles away",
-      isVerified: true,
-      isOnline: false,
-      lastActive: "5 hours ago",
-      responseTime: "Within 4 hours",
-      exchangeCount: 18,
-      offering: {
-        title: "Digital Marketing Campaign Setup",
-        description: "Complete digital marketing campaign setup including Google Ads, Facebook Ads, and analytics tracking. 3+ years experience in digital marketing.",
-        category: "Services",
-        estimatedValue: 300,
-        images: [
-          "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=200&h=200&fit=crop",
-          "https://images.unsplash.com/photo-1553028826-f4804a6dba3b?w=200&h=200&fit=crop"
-        ]
-      },
-      lookingFor: ["Web Development", "App Development", "Gift Cards"]
-    }
-  ];
-
-  const [matches, setMatches] = useState(mockMatches);
-  const [filteredMatches, setFilteredMatches] = useState(mockMatches);
+  const [filteredMatches, setFilteredMatches] = useState([]);
 
   // Mock saved searches
   const [savedSearches, setSavedSearches] = useState([
@@ -215,10 +65,10 @@ const ExchangeMatching = () => {
 
   useEffect(() => {
     applyFiltersAndSort();
-  }, [filters, sortBy, searchQuery]);
+  }, [filters, sortBy, searchQuery, hookMatches]);
 
   const applyFiltersAndSort = () => {
-    let filtered = [...matches];
+    let filtered = [...hookMatches];
 
     // Apply search query
     if (searchQuery) {
@@ -292,7 +142,6 @@ const ExchangeMatching = () => {
   const handleViewFullProfile = (partner) => {
     setIsPreviewModalOpen(false);
     // Navigate to partner's full profile (would be implemented)
-    console.log('Navigate to full profile:', partner?.id);
   };
 
   const handleSaveSearch = (name) => {
@@ -401,7 +250,12 @@ const ExchangeMatching = () => {
               </div>
 
               {/* Results */}
-              {filteredMatches?.length === 0 ? (
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-12 bg-card border border-border rounded-lg">
+                  <Icon name="Loader" className="animate-spin text-primary mb-2" size={32} />
+                  <p className="text-sm text-muted-foreground">Finding compatible partners...</p>
+                </div>
+              ) : filteredMatches?.length === 0 ? (
                 <div className="text-center py-12">
                   <Icon name="Search" size={48} color="var(--color-muted-foreground)" className="mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-foreground mb-2">No matches found</h3>

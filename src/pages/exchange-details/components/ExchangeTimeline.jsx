@@ -35,8 +35,8 @@ const ExchangeTimeline = ({ timeline }) => {
       <h3 className="text-lg font-semibold text-foreground mb-6">Exchange Timeline</h3>
       <div className="space-y-4">
         {timeline?.map((event, index) => (
-          <div key={index} className="flex items-start space-x-4">
-            <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center bg-card ${
+          <div key={index} className="relative flex items-start space-x-4 pb-6">
+            <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center bg-card z-10 ${
               index === 0 ? 'border-primary' : 'border-border'
             }`}>
               <Icon 
@@ -71,7 +71,7 @@ const ExchangeTimeline = ({ timeline }) => {
             </div>
             
             {index < timeline?.length - 1 && (
-              <div className="absolute left-4 mt-8 w-0.5 h-6 bg-border"></div>
+              <div className="absolute left-4 top-8 bottom-0 w-0.5 bg-border -translate-x-1/2"></div>
             )}
           </div>
         ))}

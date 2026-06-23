@@ -26,7 +26,7 @@ const QuickActions = () => {
       description: 'View and respond to messages from exchange partners',
       icon: 'MessageSquare',
       color: 'accent',
-      path: '/messages',
+      path: '/exchange-dashboard',
       popular: false
     },
     {
@@ -34,7 +34,7 @@ const QuickActions = () => {
       description: 'Review your completed and past exchange transactions',
       icon: 'History',
       color: 'muted',
-      path: '/exchange-history',
+      path: '/exchange-dashboard',
       popular: false
     }
   ];

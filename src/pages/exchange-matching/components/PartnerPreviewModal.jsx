@@ -33,7 +33,7 @@ const PartnerPreviewModal = ({ partner, isOpen, onClose, onSendRequest, onViewFu
     return stars;
   };
 
-  const recentReviews = [
+  const defaultReviews = [
     {
       id: 1,
       reviewer: "Sarah M.",
@@ -56,6 +56,8 @@ const PartnerPreviewModal = ({ partner, isOpen, onClose, onSendRequest, onViewFu
       date: "2 weeks ago"
     }
   ];
+
+  const displayReviews = partner?.recentReviews || defaultReviews;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -169,7 +171,7 @@ const PartnerPreviewModal = ({ partner, isOpen, onClose, onSendRequest, onViewFu
           <div>
             <h4 className="font-medium text-foreground mb-3">Recent Reviews</h4>
             <div className="space-y-3">
-              {recentReviews?.map((review) => (
+              {displayReviews?.map((review) => (
                 <div key={review?.id} className="bg-muted rounded-lg p-3">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-2">
@@ -202,7 +204,7 @@ const PartnerPreviewModal = ({ partner, isOpen, onClose, onSendRequest, onViewFu
                 <Icon name="Calendar" size={16} color="var(--color-secondary)" />
                 <span className="text-sm font-medium text-foreground">Member Since</span>
               </div>
-              <span className="text-sm text-muted-foreground">March 2023</span>
+              <span className="text-sm text-muted-foreground">{partner?.memberSince || 'March 2023'}</span>
             </div>
           </div>
         </div>

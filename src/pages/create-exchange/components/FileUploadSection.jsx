@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 import Button from '../../../components/ui/Button';
@@ -10,6 +10,16 @@ const FileUploadSection = ({ files, onFilesChange, exchangeType }) => {
   const maxFiles = 5;
   const maxFileSize = 10 * 1024 * 1024; // 10MB
   const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf', 'text/plain'];
+
+  useEffect(() => {
+    return () => {
+      files?.forEach((fileObj) => {
+        if (fileObj?.preview) {
+          URL.revokeObjectURL(fileObj.preview);
+        }
+      });
+    };
+  }, [files]);
 
   const handleDrag = (e) => {
     e?.preventDefault();
@@ -36,7 +46,7 @@ const FileUploadSection = ({ files, onFilesChange, exchangeType }) => {
   };
 
   const handleFiles = (newFiles) => {
-    const validFiles = newFiles?.filter(file => {
+    const validFiles = newFiles?.filter((file) => {
       if (!allowedTypes?.includes(file?.type)) {
         alert(`File type ${file?.type} is not supported`);
         return false;
@@ -54,20 +64,25 @@ const FileUploadSection = ({ files, onFilesChange, exchangeType }) => {
       return;
     }
 
-    const filesWithPreview = validFiles?.map(file => ({
+    const filesWithPreview = validFiles?.map((file) => ({
       file,
       id: Date.now() + Math.random(),
       name: file?.name,
       size: file?.size,
       type: file?.type,
-      preview: file?.type?.startsWith('image/') ? URL.createObjectURL(file) : null
+      preview: file?.type?.startsWith('image/') ? URL.createObjectURL(file) : null,
     }));
 
     onFilesChange([...files, ...filesWithPreview]);
   };
 
   const removeFile = (fileId) => {
-    const updatedFiles = files?.filter(f => f?.id !== fileId);
+    const fileToRemove = files?.find((file) => file?.id === fileId);
+    if (fileToRemove?.preview) {
+      URL.revokeObjectURL(fileToRemove.preview);
+    }
+
+    const updatedFiles = files?.filter((file) => file?.id !== fileId);
     onFilesChange(updatedFiles);
   };
 
@@ -104,11 +119,12 @@ const FileUploadSection = ({ files, onFilesChange, exchangeType }) => {
         <h4 className="text-base font-medium text-foreground mb-1">Supporting Files</h4>
         <p className="text-sm text-muted-foreground">{getUploadText()}</p>
       </div>
-      {/* Upload Area */}
+
       <div
         className={`relative border-2 border-dashed rounded-lg p-6 transition-colors ${
           dragActive
-            ? 'border-primary bg-primary/5' :'border-border hover:border-primary/50 bg-muted/20'
+            ? 'border-primary bg-primary/5'
+            : 'border-border hover:border-primary/50 bg-muted/20'
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -137,7 +153,7 @@ const FileUploadSection = ({ files, onFilesChange, exchangeType }) => {
           </p>
         </div>
       </div>
-      {/* File List */}
+
       {files?.length > 0 && (
         <div className="space-y-3">
           <h5 className="text-sm font-medium text-foreground">
@@ -185,18 +201,18 @@ const FileUploadSection = ({ files, onFilesChange, exchangeType }) => {
           </div>
         </div>
       )}
-      {/* Upload Guidelines */}
+
       <div className="bg-muted/30 border border-border rounded-lg p-4">
         <div className="flex items-start space-x-3">
           <Icon name="Info" size={16} color="var(--color-primary)" className="mt-0.5 flex-shrink-0" />
           <div>
             <h5 className="text-sm font-medium text-foreground mb-1">Upload Guidelines</h5>
             <ul className="text-xs text-muted-foreground space-y-1">
-              <li>• High-quality images help build trust with potential partners</li>
-              <li>• For gift cards: Cover sensitive information like codes or PINs</li>
-              <li>• For products: Show condition, brand labels, and any defects</li>
-              <li>• For services: Include certificates, portfolio samples, or testimonials</li>
-              <li>• Avoid uploading personal documents with sensitive information</li>
+              <li>- High-quality images help build trust with potential partners</li>
+              <li>- For gift cards: Cover sensitive information like codes or PINs</li>
+              <li>- For products: Show condition, brand labels, and any defects</li>
+              <li>- For services: Include certificates, portfolio samples, or testimonials</li>
+              <li>- Avoid uploading personal documents with sensitive information</li>
             </ul>
           </div>
         </div>

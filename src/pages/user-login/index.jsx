@@ -1,32 +1,32 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import AuthContainer from '../../components/ui/AuthContainer';
 import LoginForm from './components/LoginForm';
 import SocialLoginOptions from './components/SocialLoginOptions';
-import SecurityIndicators from './components/SecurityIndicators';
 import CreateAccountPrompt from './components/CreateAccountPrompt';
+import { getSession, saveUserTimezone } from '../../utils/session';
 
 const UserLogin = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    // Check if user is already logged in
-    const userToken = localStorage.getItem('userToken');
-    if (userToken) {
-      navigate('/exchange-dashboard');
+    const session = getSession();
+    if (session) {
+      const nextPath = location?.state?.from?.pathname || '/exchange-dashboard';
+      navigate(nextPath, { replace: true });
     }
 
-    // Auto-detect timezone for session management
     const timezone = Intl.DateTimeFormat()?.resolvedOptions()?.timeZone;
-    localStorage.setItem('userTimezone', timezone);
-  }, [navigate]);
+    saveUserTimezone(timezone);
+  }, [location?.state?.from?.pathname, navigate]);
 
   return (
     <div className="min-h-screen bg-background">
       <AuthContainer
-        title="Welcome Back"
-        subtitle="Sign in to your SecureSwap account to continue secure exchanges"
-        showSecurityBadge={true}
+        title="Welcome to SecureSwap"
+        subtitle="Sign in to manage and execute your peer-to-peer exchanges securely."
+        showSecurityBadge={false}
       >
         <div className="space-y-8">
           {/* Main Login Form */}
@@ -34,9 +34,6 @@ const UserLogin = () => {
 
           {/* Social Login Options */}
           <SocialLoginOptions />
-
-          {/* Security Indicators */}
-          <SecurityIndicators />
 
           {/* Create Account Prompt */}
           <CreateAccountPrompt />

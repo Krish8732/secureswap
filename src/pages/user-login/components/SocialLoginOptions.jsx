@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
+import { createDemoSession } from '../../../utils/session';
+import { useAuth } from '../../../hooks/useAuth';
 
 const SocialLoginOptions = () => {
   const navigate = useNavigate();
+  const { loginWithGoogle } = useAuth();
   const [loadingProvider, setLoadingProvider] = useState(null);
 
   const socialProviders = [
@@ -35,15 +38,20 @@ const SocialLoginOptions = () => {
     setLoadingProvider(providerId);
     
     try {
-      // Simulate OAuth flow
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Mock successful social login
-      localStorage.setItem('userToken', `mock-${providerId}-token`);
-      localStorage.setItem('userEmail', `user@${providerId}.com`);
-      localStorage.setItem('loginProvider', providerId);
-      
-      navigate('/exchange-dashboard');
+      if (providerId === 'google') {
+        await loginWithGoogle();
+        navigate('/exchange-dashboard');
+      } else {
+        // Simulate OAuth flow for others
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        createDemoSession({
+          email: `demo.${providerId}@secureswap.com`,
+          provider: providerId,
+        });
+        
+        navigate('/exchange-dashboard');
+      }
     } catch (error) {
       console.error(`${providerId} login failed:`, error);
       alert(`${providerId} login failed. Please try again.`);
@@ -84,10 +92,9 @@ const SocialLoginOptions = () => {
         <div className="flex items-start space-x-2">
           <Icon name="Info" size={16} color="var(--color-primary)" className="mt-0.5 flex-shrink-0" />
           <div className="text-xs text-muted-foreground">
-            <p className="font-medium text-foreground mb-1">Secure Social Login</p>
+            <p className="font-medium text-foreground mb-1">Demo Social Login</p>
             <p>
-              Your social login is encrypted and we never store your social media passwords. 
-              Only basic profile information is accessed with your permission.
+              These buttons simulate an OAuth success path for UI testing only. No real provider authentication happens in this build.
             </p>
           </div>
         </div>

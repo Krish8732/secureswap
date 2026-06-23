@@ -1,24 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import { Checkbox } from '../../../components/ui/Checkbox';
 import Icon from '../../../components/AppIcon';
+import { useAuth } from '../../../hooks/useAuth';
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     rememberMe: false
   });
+
+  // Auto-fill demo credentials on mount
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      email: mockCredentials.email,
+      password: mockCredentials.password,
+    }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showMFA, setShowMFA] = useState(false);
   const [mfaCode, setMfaCode] = useState('');
 
-  // Mock credentials for demonstration
+  // Mock credentials for demonstration fallback
   const mockCredentials = {
     email: 'demo@secureswap.com',
     password: 'SecurePass123!'
@@ -62,30 +74,21 @@ const LoginForm = () => {
     if (!validateForm()) return;
 
     setIsLoading(true);
+    setErrors({});
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Check mock credentials
-      if (formData?.email === mockCredentials?.email && formData?.password === mockCredentials?.password) {
-        // Simulate MFA requirement for demo user
-        if (formData?.email === mockCredentials?.email && !showMFA) {
+      const response = await login(formData.email, formData.password, formData.rememberMe);
+      if (response.success) {
+        // Handle fallback flow for mock session MFA simulate
+        if (formData.email === 'demo@secureswap.com' && !showMFA) {
           setShowMFA(true);
           setIsLoading(false);
           return;
         }
-        
-        // Successful login
-        localStorage.setItem('userToken', 'mock-jwt-token');
-        localStorage.setItem('userEmail', formData?.email);
-        if (formData?.rememberMe) {
-          localStorage.setItem('rememberUser', 'true');
-        }
         navigate('/exchange-dashboard');
       } else {
         setErrors({
-          general: `Invalid credentials. Use: ${mockCredentials?.email} / ${mockCredentials?.password}`
+          general: response.error || 'Invalid credentials.'
         });
       }
     } catch (error) {
@@ -112,11 +115,14 @@ const LoginForm = () => {
       
       // Mock MFA verification (accept any 6-digit code)
       if (mfaCode === '123456') {
-        localStorage.setItem('userToken', 'mock-jwt-token');
-        localStorage.setItem('userEmail', formData?.email);
+        createDemoSession({
+          email: formData?.email,
+          provider: 'password-mfa',
+          rememberMe: formData?.rememberMe,
+        });
         navigate('/exchange-dashboard');
       } else {
-        setErrors({ mfa: 'Invalid verification code. Use: 123456' });
+        setErrors({ mfa: 'Invalid demo verification code. Use 123456.' });
       }
     } catch (error) {
       setErrors({ mfa: 'Verification failed. Please try again.' });
@@ -126,8 +132,9 @@ const LoginForm = () => {
   };
 
   const handleForgotPassword = () => {
-    // In a real app, this would trigger password reset flow
-    alert('Password reset link would be sent to your email address.');
+    setErrors({
+      general: 'Password reset is not connected in this prototype yet.'
+    });
   };
 
   if (showMFA) {
@@ -184,6 +191,10 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Demo mode hint */}
+      <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
+        <p className="text-sm text-muted-foreground">Demo mode active. Use the pre-filled credentials below.</p>
+      </div>
       {errors?.general && (
         <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
           <p className="text-sm text-destructive">{errors?.general}</p>

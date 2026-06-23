@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
-// Default fallback rates in case API fails
+// Default fallback rates in case the public feed is unavailable.
 const FALLBACK_RATES = {
   USD: 1,
   EUR: 0.85,
@@ -24,13 +24,13 @@ const FALLBACK_RATES = {
 
 const CURRENCY_SYMBOLS = {
   USD: '$',
-  EUR: '€',
-  GBP: '£',
-  JPY: '¥',
+  EUR: '\u20AC',
+  GBP: '\u00A3',
+  JPY: '\u00A5',
   CAD: 'C$',
   AUD: 'A$',
-  INR: '₹',
-  CNY: '¥',
+  INR: '\u20B9',
+  CNY: '\u00A5',
   CHF: 'Fr',
   SEK: 'kr',
   NZD: 'NZ$',
@@ -38,8 +38,8 @@ const CURRENCY_SYMBOLS = {
   SGD: 'S$',
   HKD: 'HK$',
   NOK: 'kr',
-  KRW: '₩',
-  TRY: '₺',
+  KRW: '\u20A9',
+  TRY: '\u20BA',
   BRL: 'R$',
 };
 
@@ -59,19 +59,17 @@ export const CurrencyProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch live currency rates from API
   const fetchCurrencyRates = async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      // Check if we have cached rates less than 1 hour old
       const cachedRates = localStorage.getItem('currencyRates');
       const cachedTimestamp = localStorage.getItem('currencyRatesTimestamp');
 
       if (cachedRates && cachedTimestamp) {
-        const cacheAge = Date.now() - parseInt(cachedTimestamp);
-        const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
+        const cacheAge = Date.now() - parseInt(cachedTimestamp, 10);
+        const oneHour = 60 * 60 * 1000;
 
         if (cacheAge < oneHour) {
           setCurrencyRates(JSON.parse(cachedRates));
@@ -80,7 +78,6 @@ export const CurrencyProvider = ({ children }) => {
         }
       }
 
-      // Fetch from API
       const response = await fetch('https://cdn.jsdelivr.net/gh/fawazahmed0/exchange-api@1/latest/currencies/usd.json');
 
       if (!response.ok) {
@@ -88,43 +85,42 @@ export const CurrencyProvider = ({ children }) => {
       }
 
       const data = await response.json();
+      const usdRates = data?.usd;
 
-      // Extract rates for supported currencies
+      if (!usdRates) {
+        throw new Error('Currency feed returned an unexpected response');
+      }
+
       const newRates = {
         USD: 1,
-        EUR: data.usd.eur || FALLBACK_RATES.EUR,
-        GBP: data.usd.gbp || FALLBACK_RATES.GBP,
-        JPY: data.usd.jpy || FALLBACK_RATES.JPY,
-        CAD: data.usd.cad || FALLBACK_RATES.CAD,
-        AUD: data.usd.aud || FALLBACK_RATES.AUD,
-        INR: data.usd.inr || FALLBACK_RATES.INR,
-        CNY: data.usd.cny || FALLBACK_RATES.CNY,
-        CHF: data.usd.chf || FALLBACK_RATES.CHF,
-        SEK: data.usd.sek || FALLBACK_RATES.SEK,
-        NZD: data.usd.nzd || FALLBACK_RATES.NZD,
-        MXN: data.usd.mxn || FALLBACK_RATES.MXN,
-        SGD: data.usd.sgd || FALLBACK_RATES.SGD,
-        HKD: data.usd.hkd || FALLBACK_RATES.HKD,
-        NOK: data.usd.nok || FALLBACK_RATES.NOK,
+        EUR: usdRates?.eur || FALLBACK_RATES.EUR,
+        GBP: usdRates?.gbp || FALLBACK_RATES.GBP,
+        JPY: usdRates?.jpy || FALLBACK_RATES.JPY,
+        CAD: usdRates?.cad || FALLBACK_RATES.CAD,
+        AUD: usdRates?.aud || FALLBACK_RATES.AUD,
+        INR: usdRates?.inr || FALLBACK_RATES.INR,
+        CNY: usdRates?.cny || FALLBACK_RATES.CNY,
+        CHF: usdRates?.chf || FALLBACK_RATES.CHF,
+        SEK: usdRates?.sek || FALLBACK_RATES.SEK,
+        NZD: usdRates?.nzd || FALLBACK_RATES.NZD,
+        MXN: usdRates?.mxn || FALLBACK_RATES.MXN,
+        SGD: usdRates?.sgd || FALLBACK_RATES.SGD,
+        HKD: usdRates?.hkd || FALLBACK_RATES.HKD,
+        NOK: usdRates?.nok || FALLBACK_RATES.NOK,
       };
 
       setCurrencyRates(newRates);
-
-      // Cache the rates
       localStorage.setItem('currencyRates', JSON.stringify(newRates));
       localStorage.setItem('currencyRatesTimestamp', Date.now().toString());
-
     } catch (err) {
       console.error('Error fetching currency rates:', err);
       setError(err.message);
-      // Use fallback rates if API fails
       setCurrencyRates(FALLBACK_RATES);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Load currency preference and fetch rates on mount
   useEffect(() => {
     const savedCurrency = localStorage.getItem('userCurrency');
     if (savedCurrency && FALLBACK_RATES[savedCurrency]) {
@@ -134,7 +130,6 @@ export const CurrencyProvider = ({ children }) => {
     fetchCurrencyRates();
   }, []);
 
-  // Save currency to localStorage when changed
   const changeCurrency = (newCurrency) => {
     if (currencyRates[newCurrency]) {
       setCurrency(newCurrency);
@@ -142,18 +137,13 @@ export const CurrencyProvider = ({ children }) => {
     }
   };
 
-  // Convert amount from USD to selected currency
   const convertAmount = (amount, fromCurrency = 'USD') => {
     if (typeof amount !== 'number') return amount;
 
-    // Convert to USD first if not already
     const usdAmount = fromCurrency === 'USD' ? amount : amount / currencyRates[fromCurrency];
-
-    // Convert to selected currency
     return usdAmount * currencyRates[currency];
   };
 
-  // Format amount with currency symbol
   const formatAmount = (amount, fromCurrency = 'USD', showSymbol = true) => {
     if (typeof amount !== 'number') return amount;
 

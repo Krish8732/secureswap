@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 import Button from '../../../components/ui/Button';
+import { useCurrency } from '../../../contexts/CurrencyContext';
 
 const ExchangeCard = ({ exchange }) => {
+  const { formatAmount } = useCurrency();
   const getStatusColor = (status) => {
     switch (status) {
       case 'active':
@@ -91,7 +93,7 @@ const ExchangeCard = ({ exchange }) => {
       <div className="mb-4">
         <p className="text-sm text-foreground mb-2">{exchange?.description}</p>
         <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>Value: ${exchange?.value}</span>
+          <span>Value: {formatAmount(exchange?.value)}</span>
           <span>{formatTimeRemaining(exchange?.deadline)}</span>
         </div>
       </div>

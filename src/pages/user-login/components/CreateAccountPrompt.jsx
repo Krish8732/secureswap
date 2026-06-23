@@ -71,23 +71,6 @@ const CreateAccountPrompt = () => {
           Free to join • No hidden fees • Cancel anytime
         </p>
       </div>
-      {/* Stats */}
-      <div className="flex items-center justify-center space-x-6 py-4 bg-muted/20 rounded-lg">
-        <div className="text-center">
-          <div className="text-lg font-semibold text-foreground">50K+</div>
-          <div className="text-xs text-muted-foreground">Active Users</div>
-        </div>
-        <div className="w-px h-8 bg-border" />
-        <div className="text-center">
-          <div className="text-lg font-semibold text-foreground">1M+</div>
-          <div className="text-xs text-muted-foreground">Exchanges</div>
-        </div>
-        <div className="w-px h-8 bg-border" />
-        <div className="text-center">
-          <div className="text-lg font-semibold text-foreground">99.9%</div>
-          <div className="text-xs text-muted-foreground">Success Rate</div>
-        </div>
-      </div>
     </div>
   );
 };

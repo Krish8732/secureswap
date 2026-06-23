@@ -4,6 +4,7 @@ import Header from '../../components/ui/Header';
 import Button from '../../components/ui/Button';
 import Icon from '../../components/AppIcon';
 import ExchangeProgressIndicator from '../../components/ui/ExchangeProgressIndicator';
+import { useExchanges } from '../../hooks/useExchanges';
 
 // Import all components
 import ExchangeTypeSelector from './components/ExchangeTypeSelector';
@@ -16,8 +17,10 @@ import ExchangePreview from './components/ExchangePreview';
 
 const CreateExchange = () => {
   const navigate = useNavigate();
+  const { createExchange } = useExchanges();
   const [currentStep, setCurrentStep] = useState(1);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -33,13 +36,18 @@ const CreateExchange = () => {
     wantedCategory: '',
     wantedDescription: '',
     estimatedValue: '',
+    valueFlexibility: 'exact',
     
     // Settings
     duration: '30',
     location: '',
     isPhysical: false,
     trustLevel: 'standard',
-    isPublic: true
+    isPublic: true,
+    availableFrom: '',
+    allowPartial: false,
+    autoMatching: true,
+    requireEscrow: false
   });
 
   const steps = [
@@ -71,9 +79,17 @@ const CreateExchange = () => {
     setTimeout(() => setIsDraftSaved(false), 2000);
   };
 
-  const handlePublishExchange = () => {
-    // Publish exchange logic here
-    navigate('/exchange-dashboard');
+  const handlePublishExchange = async () => {
+    try {
+      setIsSubmitting(true);
+      await createExchange(formData);
+      navigate('/exchange-dashboard');
+    } catch (err) {
+      console.error('Failed to publish exchange:', err);
+      alert('Failed to publish exchange. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const isStepValid = (step) => {
@@ -135,10 +151,12 @@ const CreateExchange = () => {
             wantedCategory={formData?.wantedCategory}
             wantedDescription={formData?.wantedDescription}
             estimatedValue={formData?.estimatedValue}
+            valueFlexibility={formData?.valueFlexibility}
             onWantedTypeChange={(type) => updateFormData('wantedType', type)}
             onWantedCategoryChange={(category) => updateFormData('wantedCategory', category)}
             onWantedDescriptionChange={(e) => updateFormData('wantedDescription', e?.target?.value)}
             onEstimatedValueChange={(e) => updateFormData('estimatedValue', e?.target?.value)}
+            onValueFlexibilityChange={(flexibility) => updateFormData('valueFlexibility', flexibility)}
           />
         );
 
@@ -152,11 +170,19 @@ const CreateExchange = () => {
                 isPhysical={formData?.isPhysical}
                 trustLevel={formData?.trustLevel}
                 isPublic={formData?.isPublic}
+                availableFrom={formData?.availableFrom}
+                allowPartial={formData?.allowPartial}
+                autoMatching={formData?.autoMatching}
+                requireEscrow={formData?.requireEscrow}
                 onDurationChange={(duration) => updateFormData('duration', duration)}
                 onLocationChange={(e) => updateFormData('location', e?.target?.value)}
                 onIsPhysicalChange={(isPhysical) => updateFormData('isPhysical', isPhysical)}
                 onTrustLevelChange={(trustLevel) => updateFormData('trustLevel', trustLevel)}
                 onIsPublicChange={(isPublic) => updateFormData('isPublic', isPublic)}
+                onAvailableFromChange={(e) => updateFormData('availableFrom', e?.target?.value)}
+                onAllowPartialChange={(val) => updateFormData('allowPartial', val)}
+                onAutoMatchingChange={(val) => updateFormData('autoMatching', val)}
+                onRequireEscrowChange={(val) => updateFormData('requireEscrow', val)}
               />
             </div>
             <div>
@@ -258,7 +284,8 @@ const CreateExchange = () => {
                     <Button
                       variant="default"
                       onClick={handlePublishExchange}
-                      disabled={!isStepValid(4)}
+                      disabled={!isStepValid(4) || isSubmitting}
+                      loading={isSubmitting}
                       iconName="Send"
                       iconPosition="left"
                     >

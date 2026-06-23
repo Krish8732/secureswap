@@ -9,10 +9,12 @@ const WhatIWantSection = ({
   wantedCategory,
   wantedDescription,
   estimatedValue,
+  valueFlexibility,
   onWantedTypeChange,
   onWantedCategoryChange,
   onWantedDescriptionChange,
-  onEstimatedValueChange
+  onEstimatedValueChange,
+  onValueFlexibilityChange
 }) => {
   const { currency } = useCurrency();
   const wantedTypes = [
@@ -147,8 +149,9 @@ const WhatIWantSection = ({
                 type="radio"
                 name="valueFlexibility"
                 value="exact"
+                checked={valueFlexibility === 'exact'}
+                onChange={() => onValueFlexibilityChange('exact')}
                 className="w-4 h-4 text-primary border-border focus:ring-primary"
-                defaultChecked
               />
               <span className="text-sm text-foreground">Exact value</span>
             </label>
@@ -157,6 +160,8 @@ const WhatIWantSection = ({
                 type="radio"
                 name="valueFlexibility"
                 value="flexible"
+                checked={valueFlexibility === 'flexible'}
+                onChange={() => onValueFlexibilityChange('flexible')}
                 className="w-4 h-4 text-primary border-border focus:ring-primary"
               />
               <span className="text-sm text-foreground">Flexible (±20%)</span>

@@ -4,53 +4,61 @@ import Icon from '../AppIcon';
 
 const AuthContainer = ({ children, title, subtitle, showSecurityBadge = true }) => {
   return (
-    <div className="min-h-screen bg-background flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+    <div className="min-h-screen bg-background flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Subtle Ethereal Glass background glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-[40vh] bg-primary/10 dark:bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 animate-fade-up">
         {/* Logo */}
-        <Link to="/" className="flex items-center justify-center space-x-2 mb-8">
-          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-            <Icon name="ArrowLeftRight" size={24} color="white" />
+        <Link to="/" className="flex items-center justify-center space-x-3 mb-10 group">
+          <div className="w-12 h-12 bg-black/5 dark:bg-white/5 rounded-[1.25rem] flex items-center justify-center border border-black/5 dark:border-white/10 shadow-diffusion group-hover:scale-105 transition-all duration-fluid ease-fluid">
+            <Icon name="ArrowLeftRight" size={24} className="text-primary" strokeWidth={1.5} />
           </div>
-          <span className="text-2xl font-semibold text-foreground">SecureSwap</span>
+          <span className="text-3xl font-extrabold tracking-tight text-foreground">SecureSwap</span>
         </Link>
 
         {/* Security Badge */}
         {showSecurityBadge && (
-          <div className="flex items-center justify-center space-x-2 mb-6 p-3 bg-success/10 border border-success/20 rounded-lg">
-            <Icon name="Shield" size={20} color="var(--color-success)" />
-            <span className="text-sm font-medium text-success">Secure & Encrypted</span>
+          <div className="flex items-center justify-center mb-8">
+            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-primary/5 border border-primary/10 rounded-full">
+              <Icon name="MonitorSmartphone" size={16} className="text-primary" strokeWidth={1.5} />
+              <span className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">Frontend Prototype</span>
+            </div>
           </div>
         )}
 
         {/* Title and Subtitle */}
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-semibold text-foreground">{title}</h2>
+        <div className="text-center mb-10 px-4">
+          <h2 className="text-4xl font-extrabold text-foreground tracking-tighter">{title}</h2>
           {subtitle && (
-            <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>
+            <p className="mt-3 text-base text-text-secondary max-w-[40ch] mx-auto leading-relaxed">{subtitle}</p>
           )}
         </div>
       </div>
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-card py-8 px-4 shadow-elevated sm:rounded-lg sm:px-10 border border-border">
-          {children}
+      <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 animate-fade-up" style={{ animationDelay: '100ms' }}>
+        {/* High-End Visual Design: Double-Bezel (Doppelrand) Architecture */}
+        <div className="doppelrand-shell shadow-diffusion dark:shadow-diffusion-dark mx-4 sm:mx-0">
+          <div className="doppelrand-core p-8 sm:p-10">
+            {children}
+          </div>
         </div>
       </div>
 
       {/* Trust Indicators */}
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex items-center justify-center space-x-6 text-xs text-muted-foreground">
-          <div className="flex items-center space-x-1">
-            <Icon name="Lock" size={14} />
-            <span>256-bit SSL</span>
+      <div className="mt-12 sm:mx-auto sm:w-full sm:max-w-md animate-fade-up" style={{ animationDelay: '200ms' }}>
+        <div className="flex items-center justify-center space-x-8 text-xs font-medium text-text-secondary">
+          <div className="flex items-center space-x-2">
+            <Icon name="LayoutTemplate" size={16} strokeWidth={1.5} />
+            <span>UI Only</span>
           </div>
-          <div className="flex items-center space-x-1">
-            <Icon name="CheckCircle" size={14} />
-            <span>Verified Platform</span>
+          <div className="flex items-center space-x-2">
+            <Icon name="ShieldAlert" size={16} strokeWidth={1.5} />
+            <span>No Backend Auth</span>
           </div>
-          <div className="flex items-center space-x-1">
-            <Icon name="Users" size={14} />
-            <span>Trusted by 10k+</span>
+          <div className="flex items-center space-x-2">
+            <Icon name="FlaskConical" size={16} strokeWidth={1.5} />
+            <span>Demo Flow</span>
           </div>
         </div>
       </div>

@@ -4,32 +4,32 @@ import Icon from '../../../components/AppIcon';
 const SecurityBadges = () => {
   const securityFeatures = [
     {
-      icon: 'Shield',
-      title: '256-bit SSL Encryption',
-      description: 'Your data is protected with bank-level security'
+      icon: 'MonitorSmartphone',
+      title: 'Prototype Registration',
+      description: 'This form validates inputs locally and previews the intended onboarding experience.'
     },
     {
-      icon: 'Lock',
-      title: 'Secure Data Storage',
-      description: 'All personal information is encrypted and stored safely'
+      icon: 'ShieldCheck',
+      title: 'Improved Route Safety',
+      description: 'Protected pages are no longer directly accessible without a local demo session.'
     },
     {
       icon: 'CheckCircle',
-      title: 'Verified Platform',
-      description: 'Trusted by thousands of users worldwide'
+      title: 'Safer Client Defaults',
+      description: 'The app now removes the injected runtime dependency and blocks broad dev host exposure.'
     },
     {
       icon: 'Users',
-      title: 'Community Verified',
-      description: 'Join 10,000+ verified exchange partners'
+      title: 'Backend Still Needed',
+      description: 'Real account creation, storage, verification, and audit controls are not connected yet.'
     }
   ];
 
   const trustIndicators = [
-    { label: 'SSL Secured', icon: 'Lock' },
-    { label: 'GDPR Compliant', icon: 'Shield' },
-    { label: '99.9% Uptime', icon: 'CheckCircle' },
-    { label: '24/7 Support', icon: 'HeadphonesIcon' }
+    { label: 'UI Validation', icon: 'CheckCircle' },
+    { label: 'Route Guarded', icon: 'ShieldCheck' },
+    { label: 'Demo Session', icon: 'Clock3' },
+    { label: 'Needs API', icon: 'ServerCrash' }
   ];
 
   return (
@@ -66,12 +66,12 @@ const SecurityBadges = () => {
       </div>
       {/* Security Certification */}
       <div className="text-center">
-        <div className="inline-flex items-center space-x-2 px-4 py-2 bg-success/10 border border-success/20 rounded-full">
-          <Icon name="Award" size={16} color="var(--color-success)" />
-          <span className="text-sm font-medium text-success">Security Certified Platform</span>
+        <div className="inline-flex items-center space-x-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full">
+          <Icon name="Wrench" size={16} color="var(--color-primary)" />
+          <span className="text-sm font-medium text-primary">Prototype Hardening Applied</span>
         </div>
         <p className="text-xs text-muted-foreground mt-2">
-          Independently audited and verified for user safety
+          Real security certifications should only be shown after formal review and backend controls exist.
         </p>
       </div>
       {/* Privacy Notice */}
@@ -79,9 +79,9 @@ const SecurityBadges = () => {
         <div className="flex items-start space-x-3">
           <Icon name="Info" size={16} color="var(--color-primary)" className="mt-0.5" />
           <div>
-            <h4 className="text-sm font-medium text-primary">Your Privacy Matters</h4>
+            <h4 className="text-sm font-medium text-primary">Next Step</h4>
             <p className="text-xs text-muted-foreground mt-1">
-              We use your information only to facilitate secure exchanges. Your data is never sold or shared with third parties without your consent.
+              Connect this flow to a real backend before collecting production user data or displaying trust claims.
             </p>
           </div>
         </div>

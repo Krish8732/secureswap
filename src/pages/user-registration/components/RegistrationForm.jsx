@@ -4,9 +4,11 @@ import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import { Checkbox } from '../../../components/ui/Checkbox';
 import Icon from '../../../components/AppIcon';
+import { useAuth } from '../../../hooks/useAuth';
 
 const RegistrationForm = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -120,19 +122,16 @@ const RegistrationForm = () => {
     }
 
     setIsLoading(true);
+    setErrors({});
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Mock successful registration
-      console.log('Registration successful:', formData);
-      navigate('/user-login', { 
-        state: { 
-          message: 'Registration successful! Please check your email to verify your account.',
-          email: formData?.email 
-        }
-      });
+      const response = await register(formData.email, formData.password, formData.fullName);
+      if (response.success) {
+        // Log in the user immediately
+        navigate('/exchange-dashboard');
+      } else {
+        setErrors({ submit: response.error || 'Registration failed.' });
+      }
     } catch (error) {
       setErrors({ submit: 'Registration failed. Please try again.' });
     } finally {

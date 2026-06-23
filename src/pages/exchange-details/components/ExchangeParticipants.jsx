@@ -83,7 +83,7 @@ const ExchangeParticipants = ({ participants, currentUserId, isRevealed }) => {
               </div>
             </div>
             
-            <p className="text-sm text-foreground mb-3">
+            <p className="text-sm text-foreground mb-3 whitespace-pre-wrap">
               {isRevealed || isCurrentUser 
                 ? participant?.offering?.description 
                 : 'Description will be revealed after both parties commit'

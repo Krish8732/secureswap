@@ -4,41 +4,41 @@ import Icon from '../../../components/AppIcon';
 const SecurityIndicators = () => {
   const securityFeatures = [
     {
-      icon: 'Lock',
-      title: '256-bit SSL Encryption',
-      description: 'Your data is protected with bank-level security'
+      icon: 'MonitorSmartphone',
+      title: 'Prototype Access Flow',
+      description: 'This screen demonstrates the intended sign-in UX before backend integration.'
     },
     {
-      icon: 'Shield',
-      title: 'Verified Platform',
-      description: 'Certified secure by leading security auditors'
+      icon: 'ShieldAlert',
+      title: 'Client-Side Session Guard',
+      description: 'Protected pages now require a local demo session instead of open route access.'
     },
     {
       icon: 'Users',
-      title: 'Trusted by 50,000+',
-      description: 'Join thousands of secure exchange users'
+      title: 'Demo Accounts Only',
+      description: 'Use the prototype credentials above to explore the app safely.'
     },
     {
       icon: 'CheckCircle',
-      title: 'GDPR Compliant',
-      description: 'Full compliance with data protection regulations'
+      title: 'Safer Defaults',
+      description: 'The build removes the injected Rocket runtime and limits ambient client exposure.'
     }
   ];
 
   const trustBadges = [
     {
-      name: 'SSL Secured',
-      icon: 'Lock',
+      name: 'Demo Only',
+      icon: 'FlaskConical',
       color: 'text-success'
     },
     {
-      name: 'Privacy Protected',
-      icon: 'Eye',
+      name: 'Route Guarded',
+      icon: 'ShieldCheck',
       color: 'text-primary'
     },
     {
-      name: 'Fraud Prevention',
-      icon: 'Shield',
+      name: 'Session Scoped',
+      icon: 'Clock3',
       color: 'text-warning'
     }
   ];
@@ -68,28 +68,27 @@ const SecurityIndicators = () => {
           </div>
         ))}
       </div>
-      {/* Security Certifications */}
+      {/* Prototype Notes */}
       <div className="text-center py-4">
-        <p className="text-xs text-muted-foreground mb-3">Secured and certified by</p>
+        <p className="text-xs text-muted-foreground mb-3">Current hardening in this repo</p>
         <div className="flex items-center justify-center space-x-8 opacity-60">
           <div className="flex items-center space-x-1">
-            <Icon name="Award" size={20} />
-            <span className="text-xs font-medium">ISO 27001</span>
+            <Icon name="ShieldCheck" size={20} />
+            <span className="text-xs font-medium">Protected Routes</span>
           </div>
           <div className="flex items-center space-x-1">
-            <Icon name="CheckCircle" size={20} />
-            <span className="text-xs font-medium">SOC 2</span>
+            <Icon name="KeyRound" size={20} />
+            <span className="text-xs font-medium">Demo Sessions</span>
           </div>
           <div className="flex items-center space-x-1">
-            <Icon name="Shield" size={20} />
-            <span className="text-xs font-medium">PCI DSS</span>
+            <Icon name="Blocks" size={20} />
+            <span className="text-xs font-medium">CSP Applied</span>
           </div>
         </div>
       </div>
-      {/* Last Updated */}
       <div className="text-center">
         <p className="text-xs text-muted-foreground">
-          Security measures last updated: September 2025
+          Backend authentication, real OAuth, and compliance claims still need a server-side implementation.
         </p>
       </div>
     </div>

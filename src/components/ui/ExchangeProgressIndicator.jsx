@@ -9,14 +9,14 @@ const ExchangeProgressIndicator = ({
   size = 'default' 
 }) => {
   const defaultSteps = [
-    { label: 'Create Exchange', icon: 'Plus', description: 'Define your exchange requirements' },
-    { label: 'Find Partner', icon: 'Users', description: 'Match with suitable partners' },
-    { label: 'Negotiate Terms', icon: 'MessageSquare', description: 'Agree on exchange details' },
-    { label: 'Complete Exchange', icon: 'CheckCircle', description: 'Finalize the transaction' },
+    { label: 'Create Protocol', icon: 'Plus', description: 'Define execution requirements' },
+    { label: 'Find Partner', icon: 'Users', description: 'Match with suitable counterparty' },
+    { label: 'Negotiate Terms', icon: 'MessageSquare', description: 'Agree on parameters' },
+    { label: 'Execute Escrow', icon: 'Lock', description: 'Finalize the transaction' },
   ];
 
   const progressSteps = steps?.length > 0 ? steps : defaultSteps;
-  const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+  const progressPercentage = totalSteps > 1 ? ((currentStep - 1) / (totalSteps - 1)) * 100 : 100;
 
   const getStepStatus = (stepIndex) => {
     if (stepIndex < currentStep) return 'completed';
@@ -30,17 +30,6 @@ const ExchangeProgressIndicator = ({
     return step?.icon;
   };
 
-  const getStepColor = (status) => {
-    switch (status) {
-      case 'completed':
-        return 'var(--color-success)';
-      case 'current':
-        return 'var(--color-primary)';
-      default:
-        return 'var(--color-muted-foreground)';
-    }
-  };
-
   const sizeClasses = {
     sm: 'text-xs',
     default: 'text-sm',
@@ -49,51 +38,57 @@ const ExchangeProgressIndicator = ({
 
   return (
     <div className="w-full">
-      {/* Progress Bar */}
-      <div className="relative mb-8">
-        <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-border transform -translate-y-1/2">
+      {/* Liquid Cascade Progress Bar */}
+      <div className="relative mb-12 mt-4 px-4">
+        {/* Track */}
+        <div className="absolute top-1/2 left-0 right-0 h-1.5 bg-black/5 dark:bg-white/5 rounded-full transform -translate-y-1/2 overflow-hidden">
+          {/* Liquid Fill */}
           <div 
-            className="h-full bg-primary transition-all duration-500 ease-out"
+            className="h-full bg-primary transition-all duration-[1.2s] ease-fluid relative overflow-hidden"
             style={{ width: `${progressPercentage}%` }}
-          />
+          >
+            {/* Shimmer effect inside fill */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent w-full -translate-x-full animate-[shimmer_2s_infinite]" />
+          </div>
         </div>
 
-        {/* Step Indicators */}
+        {/* Step Indicators - Staggered */}
         <div className="relative flex justify-between">
           {progressSteps?.slice(0, totalSteps)?.map((step, index) => {
             const stepNumber = index + 1;
             const status = getStepStatus(stepNumber);
+            const delay = index * 100;
             
             return (
-              <div key={index} className="flex flex-col items-center">
+              <div key={index} className="flex flex-col items-center animate-fade-up" style={{ animationDelay: `${delay}ms` }}>
                 <div
-                  className={`w-10 h-10 rounded-full border-2 flex items-center justify-center bg-card transition-all duration-300 ${
+                  className={`w-12 h-12 rounded-full border-4 flex items-center justify-center transition-all duration-fluid ease-fluid ${
                     status === 'completed'
-                      ? 'border-success bg-success'
-                      : status === 'current' ?'border-primary bg-primary' :'border-border bg-card'
+                      ? 'border-background bg-primary text-primary-foreground shadow-diffusion scale-100'
+                      : status === 'current' 
+                        ? 'border-background bg-card text-primary ring-2 ring-primary shadow-diffusion scale-110' 
+                        : 'border-background bg-black/5 dark:bg-white/5 text-text-secondary scale-90 opacity-60'
                   }`}
                 >
                   <Icon
                     name={getStepIcon(step, status)}
                     size={20}
-                    color={
-                      status === 'completed' || status === 'current'
-                        ? 'white' :'var(--color-muted-foreground)'
-                    }
+                    strokeWidth={status === 'completed' ? 2 : 1.5}
                   />
                 </div>
+                
                 {showLabels && (
-                  <div className="mt-3 text-center max-w-24">
+                  <div className={`mt-4 text-center max-w-[120px] transition-all duration-fluid ${status === 'pending' ? 'opacity-50' : 'opacity-100'}`}>
                     <div
-                      className={`font-medium ${sizeClasses?.[size]} ${
-                        status === 'current' ?'text-primary'
-                          : status === 'completed' ?'text-success' :'text-muted-foreground'
+                      className={`font-semibold tracking-tight ${sizeClasses?.[size]} ${
+                        status === 'current' ? 'text-foreground'
+                          : status === 'completed' ? 'text-primary' : 'text-text-secondary'
                       }`}
                     >
                       {step?.label}
                     </div>
                     {step?.description && size !== 'sm' && (
-                      <div className="text-xs text-muted-foreground mt-1 leading-tight">
+                      <div className="text-xs text-text-secondary mt-1.5 leading-relaxed">
                         {step?.description}
                       </div>
                     )}
@@ -104,34 +99,52 @@ const ExchangeProgressIndicator = ({
           })}
         </div>
       </div>
-      {/* Current Step Info */}
-      <div className="bg-card border border-border rounded-lg p-4">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-            <Icon
-              name={progressSteps?.[currentStep - 1]?.icon || 'Circle'}
-              size={16}
-              color="var(--color-primary)"
-            />
-          </div>
-          <div>
-            <h3 className="font-medium text-foreground">
-              Step {currentStep} of {totalSteps}: {progressSteps?.[currentStep - 1]?.label}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              {progressSteps?.[currentStep - 1]?.description}
-            </p>
-          </div>
-        </div>
 
-        {/* Progress Percentage */}
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">Progress</span>
-          <span className="text-sm font-medium text-primary">
-            {Math.round(progressPercentage)}% Complete
-          </span>
+      {/* High-End Doppelrand Current Step Info */}
+      <div className="doppelrand-shell mt-8">
+        <div className="doppelrand-core p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20">
+              <Icon
+                name={progressSteps?.[currentStep - 1]?.icon || 'Circle'}
+                size={24}
+                className="text-primary"
+                strokeWidth={1.5}
+              />
+            </div>
+            <div>
+              <p className="text-sm font-semibold tracking-wider text-primary uppercase mb-1">
+                Phase {currentStep} of {totalSteps}
+              </p>
+              <h3 className="text-xl font-bold text-foreground">
+                {progressSteps?.[currentStep - 1]?.label}
+              </h3>
+              <p className="text-sm text-text-secondary mt-1">
+                {progressSteps?.[currentStep - 1]?.description}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-end min-w-[140px]">
+            <span className="text-sm font-medium text-text-secondary mb-2">Protocol Status</span>
+            <div className="w-full bg-black/5 dark:bg-white/5 rounded-full h-2 overflow-hidden">
+              <div 
+                className="bg-primary h-full rounded-full transition-all duration-fluid" 
+                style={{ width: `${progressPercentage}%` }} 
+              />
+            </div>
+            <span className="text-xs font-bold text-primary mt-2">
+              {Math.round(progressPercentage)}% Synchronized
+            </span>
+          </div>
         </div>
       </div>
+      
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes shimmer {
+          100% { transform: translateX(100%); }
+        }
+      `}} />
     </div>
   );
 };

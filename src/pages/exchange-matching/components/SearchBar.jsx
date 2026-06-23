@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Icon from '../../../components/AppIcon';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
@@ -6,6 +6,10 @@ import Button from '../../../components/ui/Button';
 const SearchBar = ({ searchQuery, onSearchChange, onSearch, suggestions = [] }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [localQuery, setLocalQuery] = useState(searchQuery);
+
+  useEffect(() => {
+    setLocalQuery(searchQuery);
+  }, [searchQuery]);
 
   const handleInputChange = (e) => {
     const value = e?.target?.value;
@@ -26,7 +30,7 @@ const SearchBar = ({ searchQuery, onSearchChange, onSearch, suggestions = [] }) 
     setShowSuggestions(false);
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e?.key === 'Enter') {
       handleSearch();
     }
@@ -62,7 +66,7 @@ const SearchBar = ({ searchQuery, onSearchChange, onSearch, suggestions = [] }) 
               placeholder="Search for services, products, or gift cards..."
               value={localQuery}
               onChange={handleInputChange}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyDown}
               onFocus={() => setShowSuggestions(localQuery?.length > 0 && suggestions?.length > 0)}
               onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
               className="pl-10 pr-4"

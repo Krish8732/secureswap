@@ -1,107 +1,57 @@
-# React
+# SecureSwap — Trustless Peer-to-Peer Exchange Platform
 
-A modern React-based project utilizing the latest frontend technologies and tools for building responsive web applications.
+SecureSwap is a trustless, peer-to-peer (P2P) exchange web application designed to enable users to swap digital services, gift cards, and physical items safely.
+
+---
 
 ## 🚀 Features
 
-- **React 18** - React version with improved rendering and concurrent features
-- **Vite** - Lightning-fast build tool and development server
-- **Redux Toolkit** - State management with simplified Redux setup
-- **TailwindCSS** - Utility-first CSS framework with extensive customization
-- **React Router v6** - Declarative routing for React applications
-- **Data Visualization** - Integrated D3.js and Recharts for powerful data visualization
-- **Form Management** - React Hook Form for efficient form handling
-- **Animation** - Framer Motion for smooth UI animations
-- **Testing** - Jest and React Testing Library setup
+* **Live Supabase DB Layer**: Fully connected data layer with dynamic fallback to browser `localStorage` if database variables are unset.
+* **Real-time Chat Negotiations**: Subscribes to Supabase realtime channels to deliver instant negotiation messages.
+* **Premium Theme Styling**: Sleek glassmorphism look with responsive Light and Dark themes.
+* **Google OAuth Authentication**: Fully supports free Google Sign-In with automated local token syncing.
+* **Protected Session Redirections**: Multi-step Route Guards protecting all private pages.
+* **Vite manual chunking & lazy routes**: Lightweight bundles for maximum loading performance.
+
+---
 
 ## 📋 Prerequisites
 
-- Node.js (v14.x or higher)
-- npm or yarn
+* Node.js (v18.x or higher)
+* npm
 
-## 🛠️ Installation
+---
 
-1. Install dependencies:
+## 🛠️ Installation & Setup
+
+1. **Install dependencies**:
    ```bash
    npm install
-   # or
-   yarn install
    ```
-   
-2. Start the development server:
+
+2. **Configure Environment Variables**:
+   Create a `.env` file in the root folder and configure your Supabase variables:
+   ```text
+   VITE_SUPABASE_URL=https://your-project-id.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-public-anon-key
+   ```
+
+3. **Start the development server**:
    ```bash
-   npm start
-   # or
-   yarn start
+   npm run dev
    ```
 
-## 📁 Project Structure
+4. **Verify build compilation**:
+   ```bash
+   npm run build
+   ```
 
-```
-react_app/
-├── public/             # Static assets
-├── src/
-│   ├── components/     # Reusable UI components
-│   ├── pages/          # Page components
-│   ├── styles/         # Global styles and Tailwind configuration
-│   ├── App.jsx         # Main application component
-│   ├── Routes.jsx      # Application routes
-│   └── index.jsx       # Application entry point
-├── .env                # Environment variables
-├── index.html          # HTML template
-├── package.json        # Project dependencies and scripts
-├── tailwind.config.js  # Tailwind CSS configuration
-└── vite.config.js      # Vite configuration
-```
+---
 
-## 🧩 Adding Routes
+## 📂 Documentation Suite
 
-To add new routes to the application, update the `Routes.jsx` file:
-
-```jsx
-import { useRoutes } from "react-router-dom";
-import HomePage from "pages/HomePage";
-import AboutPage from "pages/AboutPage";
-
-const ProjectRoutes = () => {
-  let element = useRoutes([
-    { path: "/", element: <HomePage /> },
-    { path: "/about", element: <AboutPage /> },
-    // Add more routes as needed
-  ]);
-
-  return element;
-};
-```
-
-## 🎨 Styling
-
-This project uses Tailwind CSS for styling. The configuration includes:
-
-- Forms plugin for form styling
-- Typography plugin for text styling
-- Aspect ratio plugin for responsive elements
-- Container queries for component-specific responsive design
-- Fluid typography for responsive text
-- Animation utilities
-
-## 📱 Responsive Design
-
-The app is built with responsive design using Tailwind CSS breakpoints.
-
-
-## 📦 Deployment
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-## 🙏 Acknowledgments
-
-- Built with [Rocket.new](https://rocket.new)
-- Powered by React and Vite
-- Styled with Tailwind CSS
-
-Built with ❤️ on Rocket.new
+* [PRD.md](file:///c:/Users/krish/Desktop/projects/secureswap/PRD.md): Product requirements, features, and future scope.
+* [ARCHITECTURE.md](file:///c:/Users/krish/Desktop/projects/secureswap/ARCHITECTURE.md): Directories structure, React hooks logic, and DAL maps.
+* [DATABASE_SCHEMA.md](file:///c:/Users/krish/Desktop/projects/secureswap/DATABASE_SCHEMA.md): Database table models, relationships, and RLS rules.
+* [DESIGN_SYSTEM.md](file:///c:/Users/krish/Desktop/projects/secureswap/DESIGN_SYSTEM.md): Light/Dark themes, CSS design tokens, and components styles.
+* [SECURITY.md](file:///c:/Users/krish/Desktop/projects/secureswap/SECURITY.md): Client-side hardening, Protected Route guards, and OAuth details.
