@@ -145,6 +145,7 @@ SecureSwap includes a comprehensive, modular documentation suite mapping out eve
 * 📄 [API_DOCUMENTATION.md](file:///c:/Users/krish/Desktop/projects/secureswap/API_DOCUMENTATION.md): Endpoint payloads, query structures, and realtime Postgres channels.
 * 📄 [STAGING_AND_TESTING.md](file:///c:/Users/krish/Desktop/projects/secureswap/STAGING_AND_TESTING.md): Staging deployment setup, Vercel instructions, CI/CD Actions, and Vitest hook tests.
 * 📄 [NOTIFICATIONS_SYSTEM.md](file:///c:/Users/krish/Desktop/projects/secureswap/NOTIFICATIONS_SYSTEM.md): SQL schema triggers, push-alert logic, and React Context real-time integration.
+* 📄 [ESCROW_SYSTEM_PLAN.md](file:///c:/Users/krish/Desktop/projects/secureswap/ESCROW_SYSTEM_PLAN.md): **[NEW]** P2P Escrow Vaults blueprint, commodity category analysis, and admin dispute policies.
 
 ---
 
